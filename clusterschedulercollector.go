@@ -179,6 +179,8 @@ type clusterSchedulerCollector struct {
 	queueNumPendingApplications    *prometheus.Desc
 	queueNumMaxApplications        *prometheus.Desc
 	queueNumMaxApplicationsPerUser *prometheus.Desc
+	queueResourcesUsedMemory       *prometheus.Desc
+	queueResourcesUsedvCores       *prometheus.Desc
 	scrapeFailures                 *prometheus.Desc
 	failureCount                   int
 }
@@ -212,6 +214,8 @@ func newClusterSchedulerCollector(endpoint *url.URL) *clusterSchedulerCollector 
 		queueNumPendingApplications:    prometheus.NewDesc("queue_pending_applications", "Scheduler queue num pending applications", queueLabels, nil),
 		queueNumMaxApplications:        prometheus.NewDesc("queue_max_applications", "Scheduler queue num max applications", queueLabels, nil),
 		queueNumMaxApplicationsPerUser: prometheus.NewDesc("queue_max_applications_per_user", "Scheduler queue num max applications per users", queueLabels, nil),
+		queueResourcesUsedMemory:       prometheus.NewDesc("queue_resources_used_memory", "Scheduler queue resources used memory", queueLabels, nil),
+		queueResourcesUsedvCores:       prometheus.NewDesc("queue_resources_used_vcores", "Scheduler queue resources used vcores", queueLabels, nil),
 		scrapeFailures:                 newClusterSchedulerFuncMetric("scrape_failures_total", "Number of errors while scraping YARN metrics"),
 	}
 }
@@ -235,6 +239,8 @@ func (c *clusterSchedulerCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.queueNumPendingApplications
 	ch <- c.queueNumMaxApplications
 	ch <- c.queueNumMaxApplicationsPerUser
+	ch <- c.queueResourcesUsedMemory
+	ch <- c.queueResourcesUsedvCores
 	ch <- c.scrapeFailures
 }
 
@@ -276,6 +282,8 @@ func (c *clusterSchedulerCollector) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(c.queueNumPendingApplications, prometheus.CounterValue, float64(q.NumPendingApplications), q.QueueName)
 		ch <- prometheus.MustNewConstMetric(c.queueNumMaxApplications, prometheus.CounterValue, float64(q.MaxApplications), q.QueueName)
 		ch <- prometheus.MustNewConstMetric(c.queueNumMaxApplicationsPerUser, prometheus.CounterValue, float64(q.MaxApplicationsPerUser), q.QueueName)
+		ch <- prometheus.MustNewConstMetric(c.queueResourcesUsedMemory, prometheus.CounterValue, float64(q.ResourcesUsed.Memory), q.QueueName)
+		ch <- prometheus.MustNewConstMetric(c.queueResourcesUsedvCores, prometheus.CounterValue, float64(q.ResourcesUsed.VCores), q.QueueName)
 	}
 
 	return
