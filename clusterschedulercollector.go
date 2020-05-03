@@ -185,8 +185,8 @@ type clusterSchedulerCollector struct {
 	failureCount                   int
 }
 
-func newClusterSchedulerFuncMetric(metricName string, docString string) *prometheus.Desc {
-	return prometheus.NewDesc(prometheus.BuildFQName("yarn", "scheduler", metricName), docString, nil, nil)
+func newClusterSchedulerFuncMetric(metricName string, docString string, labels []string) *prometheus.Desc {
+	return prometheus.NewDesc(prometheus.BuildFQName("yarn", "scheduler", metricName), docString, labels, nil)
 }
 
 func newClusterSchedulerCollector(endpoint *url.URL) *clusterSchedulerCollector {
@@ -195,28 +195,28 @@ func newClusterSchedulerCollector(endpoint *url.URL) *clusterSchedulerCollector 
 
 	return &clusterSchedulerCollector{
 		endpoint:                       endpoint,
-		up:                             newClusterSchedulerFuncMetric("up", "Able to contact YARN"),
-		capacity:                       newClusterSchedulerFuncMetric("capacity", "Scheduler capacity"),
-		maxCapacity:                    newClusterSchedulerFuncMetric("max_capacity", "Scheduler max capacity"),
-		usedCapacity:                   newClusterSchedulerFuncMetric("used_capacity", "Scheduler used capacity"),
-		queueNumContainers:             prometheus.NewDesc("queue_containers", "Scheduler queue num containers", queueLabels, nil),
-		queueNumApplications:           prometheus.NewDesc("queue_applications", "Scheduler queue num applications", queueLabels, nil),
-		queueCapacity:                  prometheus.NewDesc("queue_capacity", "Scheduler queue capacity", queueLabels, nil),
-		queueMaxCapacity:               prometheus.NewDesc("queue_max_capacity", "Scheduler queue max capacity", queueLabels, nil),
-		queueUsedCapacity:              prometheus.NewDesc("queue_used_capacity", "Scheduler queue used capacity", queueLabels, nil),
-		queueAbsoluteCapacity:          prometheus.NewDesc("queue_absolute_capacity", "Scheduler queue absolute capacity", queueLabels, nil),
-		queueAbsoluteMaxCapacity:       prometheus.NewDesc("queue_absolute_max_capacity", "Scheduler queue absolute max capacity", queueLabels, nil),
-		queueAbsoluteUsedCapacity:      prometheus.NewDesc("queue_absolute_used_capacity", "Scheduler queue absolute used capacity", queueLabels, nil),
-		queueAllocatedContainers:       prometheus.NewDesc("queue_allocated_containers", "Scheduler queue allocated containers", queueLabels, nil),
-		queueReservedContainers:        prometheus.NewDesc("queue_reserved_containers", "Scheduler queue reserved containers", queueLabels, nil),
-		queuePendingContainers:         prometheus.NewDesc("queue_pending_containers", "Scheduler queue pending containers", queueLabels, nil),
-		queueNumActiveApplications:     prometheus.NewDesc("queue_active_applications", "Scheduler queue num active applications", queueLabels, nil),
-		queueNumPendingApplications:    prometheus.NewDesc("queue_pending_applications", "Scheduler queue num pending applications", queueLabels, nil),
-		queueNumMaxApplications:        prometheus.NewDesc("queue_max_applications", "Scheduler queue num max applications", queueLabels, nil),
-		queueNumMaxApplicationsPerUser: prometheus.NewDesc("queue_max_applications_per_user", "Scheduler queue num max applications per users", queueLabels, nil),
-		queueResourcesUsedMemory:       prometheus.NewDesc("queue_resources_used_memory", "Scheduler queue resources used memory", queueLabels, nil),
-		queueResourcesUsedvCores:       prometheus.NewDesc("queue_resources_used_vcores", "Scheduler queue resources used vcores", queueLabels, nil),
-		scrapeFailures:                 newClusterSchedulerFuncMetric("scrape_failures_total", "Number of errors while scraping YARN metrics"),
+		up:                             newClusterSchedulerFuncMetric("up", "Able to contact YARN", nil),
+		capacity:                       newClusterSchedulerFuncMetric("capacity", "Scheduler capacity", nil),
+		maxCapacity:                    newClusterSchedulerFuncMetric("max_capacity", "Scheduler max capacity", nil),
+		usedCapacity:                   newClusterSchedulerFuncMetric("used_capacity", "Scheduler used capacity", nil),
+		queueNumContainers:             newClusterSchedulerFuncMetric("queue_containers", "Scheduler queue num containers", queueLabels),
+		queueNumApplications:           newClusterSchedulerFuncMetric("queue_applications", "Scheduler queue num applications", queueLabels),
+		queueCapacity:                  newClusterSchedulerFuncMetric("queue_capacity", "Scheduler queue capacity", queueLabels),
+		queueMaxCapacity:               newClusterSchedulerFuncMetric("queue_max_capacity", "Scheduler queue max capacity", queueLabels),
+		queueUsedCapacity:              newClusterSchedulerFuncMetric("queue_used_capacity", "Scheduler queue used capacity", queueLabels),
+		queueAbsoluteCapacity:          newClusterSchedulerFuncMetric("queue_absolute_capacity", "Scheduler queue absolute capacity", queueLabels),
+		queueAbsoluteMaxCapacity:       newClusterSchedulerFuncMetric("queue_absolute_max_capacity", "Scheduler queue absolute max capacity", queueLabels),
+		queueAbsoluteUsedCapacity:      newClusterSchedulerFuncMetric("queue_absolute_used_capacity", "Scheduler queue absolute used capacity", queueLabels),
+		queueAllocatedContainers:       newClusterSchedulerFuncMetric("queue_allocated_containers", "Scheduler queue allocated containers", queueLabels),
+		queueReservedContainers:        newClusterSchedulerFuncMetric("queue_reserved_containers", "Scheduler queue reserved containers", queueLabels),
+		queuePendingContainers:         newClusterSchedulerFuncMetric("queue_pending_containers", "Scheduler queue pending containers", queueLabels),
+		queueNumActiveApplications:     newClusterSchedulerFuncMetric("queue_active_applications", "Scheduler queue num active applications", queueLabels),
+		queueNumPendingApplications:    newClusterSchedulerFuncMetric("queue_pending_applications", "Scheduler queue num pending applications", queueLabels),
+		queueNumMaxApplications:        newClusterSchedulerFuncMetric("queue_max_applications", "Scheduler queue num max applications", queueLabels),
+		queueNumMaxApplicationsPerUser: newClusterSchedulerFuncMetric("queue_max_applications_per_user", "Scheduler queue num max applications per users", queueLabels),
+		queueResourcesUsedMemory:       newClusterSchedulerFuncMetric("queue_resources_used_memory", "Scheduler queue resources used memory", queueLabels),
+		queueResourcesUsedvCores:       newClusterSchedulerFuncMetric("queue_resources_used_vcores", "Scheduler queue resources used vcores", queueLabels),
+		scrapeFailures:                 newClusterSchedulerFuncMetric("scrape_failures_total", "Number of errors while scraping YARN metrics", nil),
 	}
 }
 
